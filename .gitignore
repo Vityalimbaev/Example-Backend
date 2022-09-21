@@ -1,0 +1,5 @@
+/.idea
+/db/db_data
+/db/test_db_data
+/app/vendor
+/old-db

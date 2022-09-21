@@ -1,0 +1,748 @@
+basePath: /api
+definitions:
+  entity.Box:
+    properties:
+      code:
+        type: string
+      content_state_id:
+        type: integer
+      creation_date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      unlimited_storage:
+        type: boolean
+    type: object
+  entity.ContentAction:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  entity.ContentState:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  entity.LoginForm:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  entity.Record:
+    properties:
+      archived_date:
+        type: integer
+      box_id:
+        type: integer
+      branch:
+        type: string
+      content_state_id:
+        type: integer
+      creation_date:
+        type: integer
+      id:
+        type: integer
+      last_treat:
+        type: integer
+      pcode:
+        type: integer
+    type: object
+  entity.RecordSearchParams:
+    properties:
+      box_id:
+        type: integer
+      branch:
+        type: string
+      content_state_id:
+        type: integer
+      end_archived_date:
+        type: integer
+      end_creation_date:
+        type: integer
+      end_last_treat:
+        type: integer
+      id:
+        type: integer
+      pcode:
+        type: integer
+      start_archived_date:
+        type: integer
+      start_creation_date:
+        type: integer
+      start_last_treat:
+        type: integer
+    type: object
+  entity.ResponseView:
+    properties:
+      data: {}
+      is_success:
+        type: boolean
+    type: object
+  entity.Role:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  entity.TokensResponseView:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      active_status:
+        type: boolean
+      branch:
+        type: string
+      creation_date:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      role_id:
+        type: integer
+      role_title:
+        type: string
+      username:
+        type: string
+    type: object
+  entity.UserSearchParams:
+    properties:
+      branch:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      role_id:
+        type: integer
+      username:
+        type: string
+    type: object
+  entity.UserSession:
+    type: object
+info:
+  contact: {}
+  description: Sadko Archive REST API.
+  title: Sadko Archive API
+  version: "1.0"
+paths:
+  /create_box:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: id field is ignored
+        in: body
+        name: Box
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Box'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: integer
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Save box
+      tags:
+      - Box
+  /create_content_action:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Only title field is accepted, the rest are ignored
+        in: body
+        name: ContentAction
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ContentAction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: integer
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create content action
+      tags:
+      - ContentAction
+  /create_content_state:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Only title field is accepted, the rest are ignored
+        in: body
+        name: ContentState
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ContentState'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: integer
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create content state
+      tags:
+      - ContentState
+  /create_record:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: pcode, content_state_id are required; archived_date, last_treat
+          are optional
+        in: body
+        name: Record
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Record'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.Record'
+            - properties:
+                data:
+                  type: integer
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create record
+      tags:
+      - Record
+  /create_role:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Only title field is accepted, the rest are ignored
+        in: body
+        name: Role
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Role'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: integer
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create role
+      tags:
+      - Role
+  /delete_content_action/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: ContentAction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete content action
+      tags:
+      - ContentAction
+  /delete_content_state/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: ContentState ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete content state
+      tags:
+      - ContentState
+  /delete_role/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete role
+      tags:
+      - Role
+  /get-users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Params for search users
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserSearchParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.User'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by params
+      tags:
+      - User
+  /get_boxes:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.Box'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get all boxes
+      tags:
+      - Box
+  /get_content_actions:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.ContentAction'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get content actions
+      tags:
+      - ContentAction
+  /get_content_states:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.ContentState'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get content states
+      tags:
+      - ContentState
+  /get_records:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 'The fields EndCreationDate, EndArchivedDate, EndLastTreat default
+          to the current date '
+        in: body
+        name: RecordSearchParams
+        required: true
+        schema:
+          $ref: '#/definitions/entity.RecordSearchParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.Record'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get records
+      tags:
+      - Record
+  /get_roles:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.Role'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get roles
+      tags:
+      - Role
+  /isauth:
+    get:
+      description: Get request with access token in header return success or error
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Checking the access token for validity
+      tags:
+      - User
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: only email
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/entity.LoginForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.TokensResponseView'
+              type: object
+      summary: SignIn by email and password
+      tags:
+      - User
+  /refresh-token:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: String with the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: refresh token string
+        in: header
+        name: Refresh-Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.UserSession'
+              type: object
+      summary: Refresh access token by refresh token
+      tags:
+      - User
+  /save-user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.User'
+              type: object
+      summary: Save new user
+      tags:
+      - User
+  /update_box:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ResponseView'
+      security:
+      - BearerAuth: []
+      summary: Get all boxes
+      tags:
+      - Box
+  /update_content_action:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Needs id and new title to change
+        in: body
+        name: ContentAction
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ContentAction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update content action
+      tags:
+      - ContentAction
+  /update_content_state:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Needs id and new title to change
+        in: body
+        name: ContentState
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ContentState'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update content state
+      tags:
+      - ContentState
+  /update_record:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: id is required
+        in: body
+        name: Record
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Record'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update record
+      tags:
+      - Record
+  /update_role:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Needs id and new title to change
+        in: body
+        name: Role
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Role'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseView'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update role
+      tags:
+      - Role
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
