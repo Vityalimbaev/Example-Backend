@@ -14,7 +14,7 @@ INSERT INTO content_action (title) VALUES ('Удаление из короба')
 INSERT INTO content_action (title) VALUES ('Переименование');
 
 INSERT INTO account (name, username, email, password, role_id, active_status, branch)
-VALUES ('admin', 'admin', 'admin@sadkomed.ru', '$2a$10$TDsjHTIQQbTwYGw6T1Ye4uGTrdiostY69m4nM5UeiLl9QcxcpEQSm', 1, true, 'sadkomed');
+VALUES ('admin', 'admin', 'admin@example.ru', '$2a$10$TDsjHTIQQbTwYGw6T1Ye4uGTrdiostY69m4nM5UeiLl9QcxcpEQSm', 1, true, 'sadkomed');
 
 
 INSERT INTO box (code, content_state_id, unlimited_storage, description) VALUES ('S874210', 1, false,'test description');

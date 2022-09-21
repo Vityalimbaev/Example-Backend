@@ -22,17 +22,6 @@ type ServerConfig struct {
 	ExternalPort        string `mapstructure:"server_external_port"`
 }
 
-type LdapConfig struct {
-	Enable      bool   `mapstructure:"enable,omitempty"`
-	Url         string `mapstructure:"url,omitempty"`
-	Port        int    `mapstructure:"port,omitempty"`
-	Domain      string `mapstructure:"domain,omitempty"`
-	RootDn      string `mapstructure:"root_dn,omitempty"`
-	MemberOf    string `mapstructure:"member_of,omitempty"`
-	TypeKeyWord string `mapstructure:"type_key_word,omitempty"`
-	DefPass     string `mapstructure:"def_pass,omitempty"`
-}
-
 type DbConfig struct {
 	Name              string `mapstructure:"db_name,omitempty"`
 	User              string `mapstructure:"db_user,omitempty"`
@@ -42,17 +31,6 @@ type DbConfig struct {
 	Port              string `mapstructure:"db_port,omitempty"`
 	SSLMode           string `mapstructure:"db_ssl_mode"`
 	MigrationsDirPath string `mapstructure:"db_migration_path"`
-}
-
-type TestDbConfig struct {
-	Name              string `mapstructure:"test_db_name,omitempty"`
-	User              string `mapstructure:"test_db_user,omitempty"`
-	Password          string `mapstructure:"test_db_password,omitempty"`
-	Type              string `mapstructure:"test_db_type,omitempty"`
-	Host              string `mapstructure:"test_db_host,omitempty"`
-	Port              string `mapstructure:"test_db_port,omitempty"`
-	SSLMode           string `mapstructure:"test_db_ssl_mode"`
-	MigrationsDirPath string `mapstructure:"test_db_migration_path"`
 }
 
 func InitConfig() {
@@ -67,7 +45,7 @@ func InitConfig() {
 
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
-	viper.SetEnvPrefix("ARCHIVE")
+	viper.SetEnvPrefix("EXAMPLE")
 
 	err := viper.ReadInConfig()
 
@@ -80,9 +58,7 @@ func InitConfig() {
 	logrus.Info("Config prepared")
 
 	logrus.Info("Loaded config database: %v", GetDbConfig())
-	logrus.Info("Loaded config database: %v", GetTestDbConfig())
 	logrus.Info("Loaded config server: %v", GetServerConfig())
-	logrus.Info("Loaded config ldap: %v", GetLdapConfig())
 }
 
 func GetServerConfig() *ServerConfig {
@@ -96,17 +72,6 @@ func GetServerConfig() *ServerConfig {
 	return serverConfig
 }
 
-func GetLdapConfig() *LdapConfig {
-	ldapConfig := &LdapConfig{}
-
-	if err := viper.Unmarshal(&ldapConfig); err != nil {
-		logrus.Panicf("Can't load ldap config. %v", err)
-		os.Exit(1)
-	}
-
-	return ldapConfig
-}
-
 func GetDbConfig() *DbConfig {
 	dbConfig := &DbConfig{}
 
@@ -116,26 +81,4 @@ func GetDbConfig() *DbConfig {
 	}
 
 	return dbConfig
-}
-
-func GetTestDbConfig() *DbConfig {
-	testdbConfig := &TestDbConfig{}
-
-	if err := viper.Unmarshal(&testdbConfig); err != nil {
-		logrus.Panicf("Can't load db_adapter config. %v", err)
-		os.Exit(1)
-	}
-
-	dbConfig := DbConfig{
-		Name:              testdbConfig.Name,
-		User:              testdbConfig.User,
-		Password:          testdbConfig.Password,
-		Type:              testdbConfig.Type,
-		Host:              testdbConfig.Host,
-		Port:              testdbConfig.Port,
-		SSLMode:           testdbConfig.SSLMode,
-		MigrationsDirPath: testdbConfig.MigrationsDirPath,
-	}
-
-	return &dbConfig
 }

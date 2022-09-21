@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
 
-  sadko-archive-db:
+  example-db:
     image: postgres:latest
     restart: always
     ports:
@@ -11,78 +11,37 @@ services:
       - ./db/db_data:/var/lib/postgresql/data
       - ./db/initdb.d:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_DB: sadko-archive-db
-      POSTGRES_PASSWORD: wrefvDvv2
+      POSTGRES_DB: example-db
+      POSTGRES_PASSWORD: wrefvDvv3
 
-  test-sadko-archive-db:
-    image: postgres:latest
-    restart: always
-    ports:
-      - "5431:5431"
-    volumes:
-      - ./db/test_db_data:/var/lib/postgresql/data
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
-    command: -p 5431
-    environment:
-      POSTGRES_DB: sadko-archive-db
-      POSTGRES_PASSWORD: wrefvDvv2
-
-
-  archive-mysql-old:
-    image: mysql:5.6.51
-    container_name:  archive-mysql-old
-    platform: linux/x86_64
-    command: [
-      '--wait_timeout=300',
-    ]
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=5zZcCfvcnuK3
-      - MYSQL_USER=app-base
-      - MYSQL_PASSWORD=5zZcCfvcnuK3
-      - MYSQL_DATABASE=archive-old-prod
-    volumes:
-      - ./old-db/mysql-app:/var/lib/mysql:rw
-      - ./old-db/init.sql:/docker-entrypoint-initdb.d
-      - ./old-db/mysql.conf.d:/etc/mysql/conf.d
-
-  archive-backend:
+  example-backend:
     build:
       context: ./
       dockerfile: ./app/Dockerfile
-    container_name: archive-backend
+    container_name: example-backend
     ports:
-      - "8082:8000"
+      - "8000:8000"
     environment:
-      ARCHIVE_SERVER_BIND: 0.0.0.0
-      ARCHIVE_SERVER_PORT: 8000
-      ARCHIVE_SERVER_READ_TIMEOUT: 10
-      ARCHIVE_SERVER_WRITE_TIMEOUT: 10
-      ARCHIVE_SERVER_EXPIRE_DURATION: 24
-      ARCHIVE_SERVER_SALT: safescs
-      ARCHIVE_SERVER_TOKEN_KEY: vnljfj
-      ARCHIVE_SERVER_LOG_LEVEL: debug
-      ARCHIVE_SERVER_LOG_SHOW_PATH: 'true'
-      ARCHIVE_SERVER_SCHEMA: http
-      ARCHIVE_SERVER_EXTERNAL_DOMAIN_NAME: 192.168.155.149
-      ARCHIVE_SERVER_EXTERNAL_PORT: 8000
+      EXAMPLE_SERVER_BIND: 0.0.0.0
+      EXAMPLE_SERVER_PORT: 8000
+      EXAMPLE_SERVER_READ_TIMEOUT: 10
+      EXAMPLE_SERVER_WRITE_TIMEOUT: 10
+      EXAMPLE_SERVER_EXPIRE_DURATION: 24
+      EXAMPLE_SERVER_SALT: safescsz
+      EXAMPLE_SERVER_TOKEN_KEY: vnljfju
+      EXAMPLE_SERVER_LOG_LEVEL: debug
+      EXAMPLE_SERVER_LOG_SHOW_PATH: 'true'
+      EXAMPLE_SERVER_SCHEMA: http
+      EXAMPLE_SERVER_EXTERNAL_DOMAIN_NAME: 127.0.0.1
+      EXAMPLE_SERVER_EXTERNAL_PORT: 8000
 
-      ARCHIVE_DB_NAME: sadko-archive-db
-      ARCHIVE_DB_PASS: wrefvDvv2
-      ARCHIVE_DB_USER: postgres
-      ARCHIVE_DB_TYPE: postgres
-      ARCHIVE_DB_HOST: sadko-archive-db
-      ARCHIVE_DB_PORT: 5432
-      ARCHIVE_DB_SSL_MODE: disable
+      EXAMPLE_DB_NAME: example-db
+      EXAMPLE_DB_PASS: wrefvDvv3
+      EXAMPLE_DB_USER: postgres
+      EXAMPLE_DB_TYPE: postgres
+      EXAMPLE_DB_HOST: example-db
+      EXAMPLE_DB_PORT: 5432
+      EXAMPLE_DB_SSL_MODE: disable
 
-      ARCHIVE_TEST_DB_NAME: sadko-archive-db
-      ARCHIVE_TEST_DB_PASS: wrefvDvv2
-      ARCHIVE_TEST_DB_USER: postgres
-      ARCHIVE_TEST_DB_TYPE: postgres
-      ARCHIVE_TEST_DB_HOST: 192.168.155.149
-      ARCHIVE_TEST_DB_PORT: 5431
-      ARCHIVE_TEST_DB_SSL_MODE: disable
     links:
-      - sadko-archive-db
+      - example-db

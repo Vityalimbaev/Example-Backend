@@ -3,11 +3,6 @@ COPY ./app /go/src/
 WORKDIR /go/src/
 RUN go mod vendor
 
-RUN mkdir -p /go/src/tests/db/migrations
-COPY /db/migrations/ /go/src/tests/db/migrations
-
-RUN go test github.com/Vityalimbaev/Example-Backend/tests
-
 RUN cd cmd/main/ && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o archive-backend .
 
 FROM harbor.alfatell.ru/dockerhub/library/alpine:latest
